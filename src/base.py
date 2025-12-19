@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 import os
-from .config import Config
+import concurrent.futures
 
 class Searcher(ABC):
     @abstractmethod
@@ -10,15 +10,8 @@ class Searcher(ABC):
 
 class Summarizer(ABC):
     @abstractmethod
-    def summarize(self, text: str) -> str:
+    def summarize(self, text: str, query: str = "") -> str:
         pass
-
-def get_client():
-    import openai
-    api_key = Config.get_velocity_api_key()
-    if not api_key:
-        return None
-    return openai.OpenAI(base_url="https://chat.velocity.online/api", api_key=api_key)
 
 class Agent:
     def __init__(self, web_searcher: Searcher, file_searcher: Searcher, summarizer: Summarizer):
@@ -26,11 +19,19 @@ class Agent:
         self.file_searcher = file_searcher
         self.summarizer = summarizer
 
-    def research(self, topic: str, local_path: str = ".") -> str:
-        web_results = self.web_searcher.search(topic)
-        file_results = self.file_searcher.search(topic, local_path)
+    def research(self, topic: str, local_path: str = ".", max_results: int = 5) -> str:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            web_future = executor.submit(self.web_searcher.search, topic, max_results) if self.web_searcher else None
+            file_future = executor.submit(self.file_searcher.search, topic, local_path, max_results) if self.file_searcher else None
+            
+            web_results = web_future.result() if web_future else []
+            file_results = file_future.result() if file_future else []
+            
+            print(f"Web search completed: {len(web_results)} results")
+            print(f"File search completed: {len(file_results)} results")
+        
         combined_text = self._combine_results(web_results, file_results)
-        summary = self.summarizer.summarize(combined_text)
+        summary = self.summarizer.summarize(combined_text, topic)
         return summary
 
     def _combine_results(self, web: List[Dict], files: List[Dict]) -> str:
