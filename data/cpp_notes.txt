@@ -1,0 +1,1 @@
+C++ pointers are variables that store memory addresses. They allow direct memory manipulation. Pointers can point to variables, arrays, or functions. Use the & operator to get an address and * to dereference.
