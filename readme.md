@@ -4,12 +4,13 @@ A Python-based AI agent that performs deep research on topics by searching the w
 
 ## Features
 
-- Web search using DuckDuckGo (free)
-- Local file search in .txt and .md files
-- AI-powered summarization (OpenAI-compatible API)
-- Clean CLI with subcommands and formatting options
-- Modular and abstract design
-- Parallel search execution for faster results
+- 🌐 Web search using DuckDuckGo (free)
+- 📁 Local file search in .txt and .md files
+- 🤖 AI-powered summarization (OpenAI-compatible API)
+- 🎨 Beautiful CLI with colors and progress indicators
+- 📊 Parallel search execution for faster results
+- ⚙️  Interactive configuration management
+- 📈 System status monitoring
 
 ## Installation
 
@@ -38,33 +39,47 @@ python main.py research
 ### Advanced Options
 ```bash
 # Disable web search, search specific paths
-deep-research research --no-web --paths /path/to/docs --max-results 10
+python main.py research --no-web --paths /path/to/docs --max-results 10
 
 # Output to file in JSON format (applies to all queries in session)
-deep-research research --format json --output results.json
+python main.py research --format json --output results.json
 
-# Verbose mode with progress
-deep-research research --verbose
+# Verbose mode with detailed progress
+python main.py research --verbose
 
 # Depth modes: light (brief), standard, deep (detailed)
-deep-research research --depth deep --max-results 15
+python main.py research --depth deep --max-results 15
 ```
 
-### Configuration
+### Configuration Management
 ```bash
-# Get config values
-deep-research config get LOCAL_SEARCH_PATH
+# Get configuration values
+python main.py config get LOCAL_SEARCH_PATH
+python main.py config get VELOCITY_API_KEY
 
-# Set config values
-deep-research config set LOCAL_SEARCH_PATH ./my_docs
-deep-research config set VELOCITY_API_KEY your_api_key
+# Set configuration values
+python main.py config set LOCAL_SEARCH_PATH ./my_docs
+python main.py config set VELOCITY_API_KEY your_api_key
 ```
 
-### Help
+### System Status
 ```bash
-deep-research --help
-deep-research research --help
+# Check system status and configuration
+python main.py status
 ```
+
+### Version Information
+```bash
+python main.py --version
+```
+
+## CLI Features
+
+- **🎨 Rich Interface**: Colorful output with panels, progress bars, and icons
+- **📊 Progress Tracking**: Real-time progress with spinners, bars, and time estimates
+- **🔄 Interactive Mode**: Enter multiple queries without restarting
+- **⚙️  Smart Configuration**: Environment-based config with validation
+- **🚦 Status Monitoring**: Comprehensive system health checks
 
 ## Configuration
 

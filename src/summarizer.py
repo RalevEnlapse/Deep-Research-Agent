@@ -20,8 +20,10 @@ class TextSummarizer(Summarizer):
             sentences = re.split(r'(?<=[.!?]) +', text)
             summary_sentences = sentences[:3]  # First 3 sentences
             return ' '.join(summary_sentences)
+
         if len(text) < 50:
             return text
+
         try:
             if self.depth == "light":
                 prompt = f"Summarize the following research data briefly about '{query}': {text}"
@@ -34,17 +36,19 @@ class TextSummarizer(Summarizer):
                 max_tokens = 500
             else:
                 prompt = f"Summarize the following research data about '{query}': {text}"
-                max_tokens = 150
+                max_tokens = 1500
 
             response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="openai.openai/gpt-5.2",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant that summarizes research data."},
+                    {"role": "system", "content": "You are a helpful assistant that summarizes research data. And the summaries are well structured, easy to read. And just a few sentences."},
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=max_tokens
             )
+        
             return response.choices[0].message.content
+
         except Exception as e:
             # Try with gpt-4 if gpt-3.5 fails
             try:
@@ -63,8 +67,11 @@ class TextSummarizer(Summarizer):
                 sentences = re.split(r'(?<=[.!?]) +', text)
                 query_words = query.lower().split()
                 relevant_sentences = [s for s in sentences if any(word in s.lower() for word in query_words)]
+                
                 if not relevant_sentences:
                     relevant_sentences = sentences
+
                 num_sentences = 5 if self.depth == "deep" else 3
                 summary_sentences = relevant_sentences[:num_sentences]
+
                 return ' '.join(summary_sentences)
