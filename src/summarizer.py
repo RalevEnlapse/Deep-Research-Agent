@@ -41,8 +41,18 @@ class TextSummarizer(Summarizer):
             response = self.client.chat.completions.create(
                 model="openai.openai/gpt-5.2",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant that summarizes research data. And the summaries are well structured, easy to read. And just a few sentences."},
-                    {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a research summarization assistant for a CLI tool. "
+                        "Produce a clear, well-structured summary that is easy to scan. "
+                        "Use Markdown with short headings and bullet points. "
+                        f"Keep it concise (3–6 sentences total, max tokens {max_tokens}). "
+                        "Only use information present in the provided sources; do not invent details. "
+                        "If evidence is weak or missing, say so explicitly."
+                    ),
+                },
+                {"role": "user", "content for research summarization ": prompt}
                 ],
                 max_tokens=max_tokens
             )
